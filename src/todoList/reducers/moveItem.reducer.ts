@@ -16,7 +16,6 @@ export const moveItemReducer: Reducer<TodoListData, TodoListAction> = (
   }
 
   const newState = { ...state };
-console.log(from);
   const fromArray = state[from] as TodoListItemData[];
   const currentItem = fromArray.find((i) => i.id === id) as TodoListItemData;
   newState[from] = fromArray.filter((i) => i.id !== id);
