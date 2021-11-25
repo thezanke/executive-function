@@ -12,6 +12,8 @@ export const TodoListItem: React.FunctionComponent<
   const [{ isDragging }, handleRef, itemRef] = useTodoListItem(id, listKey);
   const cursor = isDragging ? "grabbing" : "grab";
 
+  const isDone = listKey === TodoListKeys.Done;
+  
   return (
     <ListItem ref={itemRef} sx={{ cursor, padding: "5px" }}>
       <Box ref={handleRef}>
@@ -20,7 +22,7 @@ export const TodoListItem: React.FunctionComponent<
           sx={{ verticalAlign: "middle", mr: "10px", color: "text.secondary" }}
         />
       </Box>
-      <InputBase fullWidth value={contents} placeholder="I need to..." />
+      <InputBase fullWidth value={contents} placeholder="I need to..." disabled={isDone} />
     </ListItem>
   );
 };
