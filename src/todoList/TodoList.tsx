@@ -1,43 +1,40 @@
-import React, { useReducer } from "react";
-import { v4 } from "uuid";
-import { DispatchContext } from "./dispatch.context";
-import { todoListReducer } from "./reducers/todoList.reducer";
+import React, { useMemo } from "react";
+import { useTodoList } from "./hooks/useTodoList";
+import { TodoListActionsContext } from "./todoListActions.context";
 import { TodoListFab } from "./TodoListFab";
 import { TodoSubList } from "./TodoSubList";
-import { TodoListData, TodoListKeys } from "./types";
-
-const initialTodoList: TodoListData = {
-  current: [],
-  todo: [
-    { id: v4(), contents: "Aliquid quis qui quod corrupti totam assumends." },
-    { id: v4(), contents: "Ipsam maxime ea doloribus nemo nobis sed hic und." },
-    { id: v4(), contents: "Esse nostrum pariatur omnis libero qui." },
-    { id: v4(), contents: "Ut numquam debitis laudantium." },
-  ],
-  done: [],
-};
+import { TodoListItemState } from "./types";
 
 export const TodoList: React.FunctionComponent = () => {
-  const [todoList, dispatch] = useReducer(todoListReducer, initialTodoList);
+  const [todoList, actions] = useTodoList();
+
+  const { current, todo, done } = useMemo(() => {
+    const items = Object.values(todoList.items);
+    const current = items.filter((i) => i.state === TodoListItemState.Current);
+    const todo = items.filter((i) => i.state === TodoListItemState.Todo);
+    const done = items.filter((i) => i.state === TodoListItemState.Done);
+
+    return { current, todo, done };
+  }, [todoList]);
 
   return (
-    <DispatchContext.Provider value={dispatch}>
+    <TodoListActionsContext.Provider value={actions}>
       <TodoSubList
         header="Current"
-        listKey={TodoListKeys.Current}
-        items={todoList.current}
+        listKey={TodoListItemState.Current}
+        items={current}
       />
       <TodoSubList
         header="Todo"
-        listKey={TodoListKeys.Todo}
-        items={todoList.todo}
+        listKey={TodoListItemState.Todo}
+        items={todo}
       />
       <TodoSubList
         header="Done"
-        listKey={TodoListKeys.Done}
-        items={todoList.done}
+        listKey={TodoListItemState.Done}
+        items={done}
       />
       <TodoListFab />
-    </DispatchContext.Provider>
+    </TodoListActionsContext.Provider>
   );
 };

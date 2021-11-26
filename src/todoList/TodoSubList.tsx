@@ -5,11 +5,11 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
-import { TodoListKeys } from "./types";
+import { TodoListItemState } from "./types";
 
 export const TodoSubList: React.FunctionComponent<{
   header: string;
-  listKey: TodoListKeys;
+  listKey: TodoListItemState;
   items: any[];
 }> = (props) => {
   const { header, items, listKey } = props;

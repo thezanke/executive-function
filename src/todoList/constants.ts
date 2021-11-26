@@ -1,0 +1,1 @@
+export const TODO_LIST_STATE_KEY = 'todoListState';

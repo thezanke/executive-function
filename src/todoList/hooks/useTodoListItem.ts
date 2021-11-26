@@ -1,15 +1,17 @@
 import { useDrag } from "react-dnd";
-import { DraggableType, TodoListKeys } from "../types";
+import { DraggableType } from "../types";
 
-export const useTodoListItem = (id:string, listKey: TodoListKeys) => {
-  return useDrag(
+export const useTodoListItem = (id: string) => {
+  const drag = useDrag(
     () => ({
       type: DraggableType.ListItem,
-      item: { id, listKey },
+      item: { id },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [id, listKey]
-  );
-}
+    [id]
+  ) as any[];
+
+  return [...drag];
+};

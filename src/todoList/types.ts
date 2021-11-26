@@ -1,19 +1,22 @@
+export type TodoListItemId = string;
+
+export enum TodoListItemState {
+  Current = "current",
+  Todo = "todo",
+  Done = "done",
+}
+
 export type TodoListItemData = {
-  id: string;
+  id: TodoListItemId;
   contents: string;
+  state: TodoListItemState;
 };
 
 export type TodoListData = {
-  current: TodoListItemData[];
-  todo: TodoListItemData[];
-  done: TodoListItemData[];
+  items: {
+    [key: TodoListItemId]: TodoListItemData;
+  };
 };
-
-export enum TodoListKeys {
-  Current = "current",
-  Todo = "todo",
-  Done =  "done"
-}
 
 export enum TodoListActionType {
   CreateItem = "CREATE_ITEM",
@@ -30,4 +33,14 @@ export type TodoListAction = {
   data?: any;
 };
 
-export type MoveItemPayload = { to: TodoListKeys; from: TodoListKeys; id: string };
+export type MoveItemPayload = {
+  to: TodoListItemState;
+  id: string;
+};
+export type UpdateItemPayload = { id: string; value: string };
+
+export type TodoListActions = {
+  moveItem: (payload: MoveItemPayload) => void;
+  createItem: () => void;
+  updateItem: (payload: UpdateItemPayload) => void;
+};

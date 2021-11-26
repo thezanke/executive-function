@@ -1,17 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import { useCallback, useContext } from "react";
-import { DispatchContext } from "./dispatch.context";
-import { TodoListActionType } from "./types";
+import { TodoListActionsContext } from "./todoListActions.context";
 
 export const TodoListFab = () => {
-  const dispatch = useContext(DispatchContext);
+  const todoListActions = useContext(TodoListActionsContext);
 
   const dispatchItemCreate = useCallback(() => {
-    if (!dispatch) return;
-
-    dispatch({ type: TodoListActionType.CreateItem });
-  }, [dispatch]);
+    todoListActions?.createItem();
+  }, [todoListActions]);
 
   return (
     <Fab

@@ -1,12 +1,18 @@
 import { Reducer } from "react";
 import { v4 } from "uuid";
-import { TodoListAction, TodoListData, TodoListItemData, TodoListKeys } from "../types";
+import { TodoListAction, TodoListData, TodoListItemState } from "../types";
 
 export const createItemReducer: Reducer<TodoListData, TodoListAction> = (
   state,
   action
 ) => {
-  const newItem: TodoListItemData = { id: v4(), contents: '' };
-  
-  return { ...state, [TodoListKeys.Todo]: [newItem, ...state[TodoListKeys.Todo]] }
+  const id = v4();
+  const newState = { ...state };
+  newState.items[id] = {
+    id,
+    contents: "",
+    state: TodoListItemState.Todo,
+  };
+
+  return newState;
 };
