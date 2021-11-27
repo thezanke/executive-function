@@ -5,11 +5,11 @@ import { TodoListFab } from "./TodoListFab";
 import { TodoSubList } from "./TodoSubList";
 import { TodoListItemState } from "./types";
 
-export const TodoList: React.FunctionComponent = () => {
+export const TodoList: React.FunctionComponent = React.memo(() => {
   const [todoList, actions] = useTodoList();
 
   const { current, todo, done } = useMemo(() => {
-    const items = Object.values(todoList.items);
+    const items = Object.values(todoList.items).reverse();
     const current = items.filter((i) => i.state === TodoListItemState.Current);
     const todo = items.filter((i) => i.state === TodoListItemState.Todo);
     const done = items.filter((i) => i.state === TodoListItemState.Done);
@@ -37,4 +37,4 @@ export const TodoList: React.FunctionComponent = () => {
       <TodoListFab />
     </TodoListActionsContext.Provider>
   );
-};
+});

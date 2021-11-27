@@ -1,4 +1,4 @@
-import { Reducer, useCallback, useReducer } from "react";
+import { Reducer, useCallback, useMemo, useReducer } from "react";
 import { storage } from "../../storage";
 import { TODO_LIST_STATE_KEY } from "../constants";
 import { handleCreateItem } from "../handlers/handleCreateItem";
@@ -42,7 +42,7 @@ export const todoListReducer: Reducer<TodoListData, TodoListAction> = (
 export const useTodoList = (): [TodoListData, TodoListActions] => {
   const [state, dispatch] = useReducer(todoListReducer, initialTodoList);
 
-  const actions: any = {};
+  const actions: any = useMemo(() => ({}), []);
 
   actions.moveItem = useCallback(
     (payload: MoveItemPayload) => {

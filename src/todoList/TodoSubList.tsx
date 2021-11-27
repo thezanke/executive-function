@@ -11,7 +11,7 @@ export const TodoSubList: React.FunctionComponent<{
   header: string;
   listKey: TodoListItemState;
   items: any[];
-}> = (props) => {
+}> = React.memo((props) => {
   const { header, items, listKey } = props;
   const [{ isOver }, nodeRef] = useTodoSubList(listKey);
 
@@ -33,4 +33,4 @@ export const TodoSubList: React.FunctionComponent<{
       </List>
     </Paper>
   );
-};
+});

@@ -2,14 +2,19 @@ import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { InputBase, ListItemIcon } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import ListItem from "@mui/material/ListItem";
-import React, { ChangeEvent, useCallback, useContext } from "react";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  useCallback,
+  useContext,
+} from "react";
 import { useTodoListItem } from "./hooks/useTodoListItem";
 import { TodoListActionsContext } from "./todoListActions.context";
 import { TodoListItemData, TodoListItemState } from "./types";
 
 export const TodoListItem: React.FunctionComponent<
   TodoListItemData & { listKey: TodoListItemState }
-> = ({ id, listKey, contents }) => {
+> = React.memo(({ id, listKey, contents }) => {
   const [{ isDragging }, handleRef, itemRef] = useTodoListItem(id);
   const todoListActions = useContext(TodoListActionsContext);
   const handleInputChange = useCallback(
@@ -18,6 +23,12 @@ export const TodoListItem: React.FunctionComponent<
     },
     [id, todoListActions]
   );
+  const handleKey = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      console.log('test');
+      todoListActions?.createItem();
+    }
+  }, [todoListActions]);
 
   const cursor = isDragging ? "grabbing" : "grab";
   const isDone = listKey === TodoListItemState.Done;
@@ -32,8 +43,10 @@ export const TodoListItem: React.FunctionComponent<
         placeholder="I need to..."
         disabled={isDone}
         onChange={handleInputChange}
+        onKeyPress={handleKey}
         autoFocus={!contents.length}
+        fullWidth
       />
     </ListItem>
   );
-};
+});

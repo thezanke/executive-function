@@ -7,7 +7,7 @@ export const handleCreateItem: Reducer<TodoListData, TodoListAction> = (
   action
 ) => {
   const id = v4();
-  const newState = { ...state };
+  const newState = { ...state, items: { ...state.items } };
   newState.items[id] = {
     id,
     contents: "",
