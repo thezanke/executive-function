@@ -3,8 +3,8 @@ import { InputBase, ListItemIcon } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import ListItem from "@mui/material/ListItem";
 import React, { ChangeEvent, useCallback, useContext } from "react";
-import { TodoListActionsContext } from "./todoListActions.context";
 import { useTodoListItem } from "./hooks/useTodoListItem";
+import { TodoListActionsContext } from "./todoListActions.context";
 import { TodoListItemData, TodoListItemState } from "./types";
 
 export const TodoListItem: React.FunctionComponent<
@@ -32,6 +32,7 @@ export const TodoListItem: React.FunctionComponent<
         placeholder="I need to..."
         disabled={isDone}
         onChange={handleInputChange}
+        autoFocus={!contents.length}
       />
     </ListItem>
   );

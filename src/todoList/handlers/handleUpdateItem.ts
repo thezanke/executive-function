@@ -1,13 +1,12 @@
 import { Reducer } from "react";
 import { TodoListAction, TodoListData, UpdateItemPayload } from "../types";
 
-export const updateItemReducer: Reducer<TodoListData, TodoListAction> = (
+export const handleUpdateItem: Reducer<TodoListData, TodoListAction> = (
   state,
   action
 ) => {
-  const { id, value }: UpdateItemPayload = action.data;
-  
   const newState = { ...state };
+  const { id, value }: UpdateItemPayload = action.data;
   newState.items[id] = { ...state.items[id], contents: value };
 
   return newState;

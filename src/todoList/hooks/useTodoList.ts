@@ -1,9 +1,12 @@
-import { useMemo, useReducer } from "react";
+import { Reducer, useCallback, useReducer } from "react";
 import { storage } from "../../storage";
 import { TODO_LIST_STATE_KEY } from "../constants";
-import { todoListReducer } from "../reducers/todoList.reducer";
+import { handleCreateItem } from "../handlers/handleCreateItem";
+import { handleMoveItem } from "../handlers/handleMoveItem";
+import { handleUpdateItem } from "../handlers/handleUpdateItem";
 import {
   MoveItemPayload,
+  TodoListAction,
   TodoListActions,
   TodoListActionType,
   TodoListData,
@@ -16,63 +19,85 @@ const initialTodoList: TodoListData = {
   ...storage.read(TODO_LIST_STATE_KEY),
 };
 
+const actionHandlers = {
+  [TodoListActionType.MoveItem]: handleMoveItem,
+  [TodoListActionType.CreateItem]: handleCreateItem,
+  [TodoListActionType.UpdateItem]: handleUpdateItem,
+};
+
+export const todoListReducer: Reducer<TodoListData, TodoListAction> = (
+  initialState,
+  action
+) => {
+  const newState =
+    actionHandlers[action.type]?.(initialState, action) ?? initialState;
+
+  storage.write(TODO_LIST_STATE_KEY, newState);
+
+  console.log({ ...action, initialState, newState });
+
+  return newState;
+};
+
 export const useTodoList = (): [TodoListData, TodoListActions] => {
-  const [todoListState, dispatch] = useReducer(
-    todoListReducer,
-    initialTodoList
-  );
+  const [state, dispatch] = useReducer(todoListReducer, initialTodoList);
 
-  const actions = useMemo(
-    () => ({
-      moveItem(payload: MoveItemPayload) {
-        const item = todoListState.items[payload.id];
+  const actions: any = {};
 
-        if (payload.to === item.state) return;
+  actions.moveItem = useCallback(
+    (payload: MoveItemPayload) => {
+      const item = state.items[payload.id];
 
-        if (item.state === TodoListItemState.Done) {
-          if (
-            !window.confirm("Are you sure you want to un-complete this item?")
-          ) {
-            return;
-          }
+      if (payload.to === item.state) return;
+
+      if (item.state === TodoListItemState.Done) {
+        if (
+          !window.confirm("Are you sure you want to un-complete this item?")
+        ) {
+          return;
         }
+      }
 
-        if (payload.to === TodoListItemState.Current) {
-          const currentItem = Object.values(todoListState.items).find(
-            (i) => i.state === TodoListItemState.Current
-          );
-
-          if (currentItem) {
-            dispatch({
-              type: TodoListActionType.MoveItem,
-              data: { id: currentItem.id, to: TodoListItemState.Todo },
-            });
-          }
-        }
-
-        dispatch({
-          type: TodoListActionType.MoveItem,
-          data: payload,
-        });
-      },
-      createItem() {
-        const existingEmptyTodo = Object.values(todoListState.items).find(
-          (i) => i.state === TodoListItemState.Todo && !i.contents.trim().length
+      if (payload.to === TodoListItemState.Current) {
+        const currentItem = Object.values(state.items).find(
+          (i) => i.state === TodoListItemState.Current
         );
 
-        if (existingEmptyTodo) return;
-        
-        dispatch({ type: TodoListActionType.CreateItem });
-      },
-      updateItem(payload: UpdateItemPayload) {
-        dispatch({
-          type: TodoListActionType.UpdateItem,
-          data: payload,
-        });
-      },
-    }),
-    [todoListState, dispatch]
+        if (currentItem) {
+          dispatch({
+            type: TodoListActionType.MoveItem,
+            data: { id: currentItem.id, to: TodoListItemState.Todo },
+          });
+        }
+      }
+
+      dispatch({
+        type: TodoListActionType.MoveItem,
+        data: payload,
+      });
+    },
+    [state.items, dispatch]
   );
 
-  return [todoListState, actions];
+  actions.createItem = useCallback(() => {
+    const existingEmptyTodo = Object.values(state.items).find(
+      (i) => i.state === TodoListItemState.Todo && !i.contents.trim().length
+    );
+
+    if (existingEmptyTodo) return;
+
+    dispatch({ type: TodoListActionType.CreateItem });
+  }, [state.items, dispatch]);
+
+  actions.updateItem = useCallback(
+    (payload: UpdateItemPayload) => {
+      dispatch({
+        type: TodoListActionType.UpdateItem,
+        data: payload,
+      });
+    },
+    [dispatch]
+  );
+
+  return [state, actions];
 };

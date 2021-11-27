@@ -2,7 +2,7 @@ import { useDrag } from "react-dnd";
 import { DraggableType } from "../types";
 
 export const useTodoListItem = (id: string) => {
-  const drag = useDrag(
+  return useDrag(
     () => ({
       type: DraggableType.ListItem,
       item: { id },
@@ -11,7 +11,5 @@ export const useTodoListItem = (id: string) => {
       }),
     }),
     [id]
-  ) as any[];
-
-  return [...drag];
+  );
 };

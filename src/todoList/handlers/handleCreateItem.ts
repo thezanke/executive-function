@@ -2,7 +2,7 @@ import { Reducer } from "react";
 import { v4 } from "uuid";
 import { TodoListAction, TodoListData, TodoListItemState } from "../types";
 
-export const createItemReducer: Reducer<TodoListData, TodoListAction> = (
+export const handleCreateItem: Reducer<TodoListData, TodoListAction> = (
   state,
   action
 ) => {
