@@ -1,9 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import React, { useCallback, useContext } from "react";
-import { TodoListActionsContext } from "./todoListActions.context";
+import { TodoListActionsContext } from "./TodoListActionsContext";
 
-export const TodoListFab = React.memo(() => {
+export const TodoListFab = () => {
   const todoListActions = useContext(TodoListActionsContext);
 
   const dispatchItemCreate = useCallback(() => {
@@ -24,4 +24,4 @@ export const TodoListFab = React.memo(() => {
       <AddIcon />
     </Fab>
   );
-});
+};

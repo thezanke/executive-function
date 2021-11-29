@@ -9,7 +9,7 @@ import React, {
   useContext,
 } from "react";
 import { useTodoListItem } from "./hooks/useTodoListItem";
-import { TodoListActionsContext } from "./todoListActions.context";
+import { TodoListActionsContext } from "./TodoListActionsContext";
 import { TodoListItemData, TodoListItemState } from "./types";
 
 export const TodoListItem: React.FunctionComponent<
@@ -23,12 +23,15 @@ export const TodoListItem: React.FunctionComponent<
     },
     [id, todoListActions]
   );
-  const handleKey = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log('test');
-      todoListActions?.createItem();
-    }
-  }, [todoListActions]);
+  const handleKey = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        console.log("test");
+        todoListActions?.createItem();
+      }
+    },
+    [todoListActions]
+  );
 
   const cursor = isDragging ? "grabbing" : "grab";
   const isDone = listKey === TodoListItemState.Done;

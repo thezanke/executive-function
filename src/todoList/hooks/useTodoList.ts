@@ -1,4 +1,4 @@
-import { Reducer, useCallback, useMemo, useReducer } from "react";
+import { Reducer, useCallback, useReducer, useRef } from "react";
 import { storage } from "../../storage";
 import { TODO_LIST_STATE_KEY } from "../constants";
 import { handleCreateItem } from "../handlers/handleCreateItem";
@@ -26,25 +26,26 @@ const actionHandlers = {
 };
 
 export const todoListReducer: Reducer<TodoListData, TodoListAction> = (
-  initialState,
+  prevState,
   action
 ) => {
-  const newState =
-    actionHandlers[action.type]?.(initialState, action) ?? initialState;
+  const nextState =
+    actionHandlers[action.type]?.(prevState, action) ?? prevState;
 
-  storage.write(TODO_LIST_STATE_KEY, newState);
+  storage.write(TODO_LIST_STATE_KEY, nextState);
 
-  console.log({ ...action, initialState, newState });
+  console.log({ ...action, initialState: prevState, newState: nextState });
 
-  return newState;
+  return nextState;
 };
 
-export const useTodoList = (): [TodoListData, TodoListActions] => {
+export const useTodoList = (): [
+  TodoListData,
+  React.MutableRefObject<TodoListActions>
+] => {
   const [state, dispatch] = useReducer(todoListReducer, initialTodoList);
 
-  const actions: any = useMemo(() => ({}), []);
-
-  actions.moveItem = useCallback(
+  const moveItem = useCallback(
     (payload: MoveItemPayload) => {
       const item = state.items[payload.id];
 
@@ -79,7 +80,7 @@ export const useTodoList = (): [TodoListData, TodoListActions] => {
     [state.items, dispatch]
   );
 
-  actions.createItem = useCallback(() => {
+  const createItem = useCallback(() => {
     const existingEmptyTodo = Object.values(state.items).find(
       (i) => i.state === TodoListItemState.Todo && !i.contents.trim().length
     );
@@ -89,7 +90,7 @@ export const useTodoList = (): [TodoListData, TodoListActions] => {
     dispatch({ type: TodoListActionType.CreateItem });
   }, [state.items, dispatch]);
 
-  actions.updateItem = useCallback(
+  const updateItem = useCallback(
     (payload: UpdateItemPayload) => {
       dispatch({
         type: TodoListActionType.UpdateItem,
@@ -98,6 +99,8 @@ export const useTodoList = (): [TodoListData, TodoListActions] => {
     },
     [dispatch]
   );
+
+  const actions = useRef({ moveItem, createItem, updateItem });
 
   return [state, actions];
 };
