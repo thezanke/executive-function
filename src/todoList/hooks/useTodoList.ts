@@ -51,11 +51,11 @@ export const useTodoList = (): [TodoListData, TodoListActions] => {
       if (payload.to === item.state) return;
 
       if (item.state === TodoListItemState.Done) {
-        if (
-          !window.confirm("Are you sure you want to un-complete this item?")
-        ) {
-          return;
-        }
+        const confirmed = window.confirm(
+          "Are you sure you want to un-complete this item?"
+        );
+
+        if (!confirmed) return;
       }
 
       if (payload.to === TodoListItemState.Current) {
