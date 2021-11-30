@@ -22,6 +22,7 @@ export enum TodoListActionType {
   CreateItem = "CREATE_ITEM",
   UpdateItem = "UPDATE_ITEM",
   MoveItem = "MOVE_ITEM",
+  RemoveItem = "REMOVE_ITEM",
 }
 
 export enum DraggableType {
@@ -35,12 +36,14 @@ export type TodoListAction = {
 
 export type MoveItemPayload = {
   to: TodoListItemState;
-  id: string;
+  id: TodoListItemId;
 };
-export type UpdateItemPayload = { id: string; value: string };
+
+export type UpdateItemPayload = { id: TodoListItemId; value: string };
 
 export type TodoListActions = {
   moveItem: (payload: MoveItemPayload) => void;
   createItem: () => void;
   updateItem: (payload: UpdateItemPayload) => void;
+  removeItem: (payload: TodoListItemId) => void;
 };

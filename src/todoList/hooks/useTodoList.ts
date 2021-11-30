@@ -1,15 +1,17 @@
-import { Reducer, useCallback, useReducer, useRef } from "react";
+import { Reducer, useCallback, useMemo, useReducer } from "react";
 import { storage } from "../../storage";
 import { TODO_LIST_STATE_KEY } from "../constants";
 import { handleCreateItem } from "../handlers/handleCreateItem";
 import { handleMoveItem } from "../handlers/handleMoveItem";
 import { handleUpdateItem } from "../handlers/handleUpdateItem";
+import { handleRemoveItem } from "../handlers/handleRemoveItem";
 import {
   MoveItemPayload,
   TodoListAction,
   TodoListActions,
   TodoListActionType,
   TodoListData,
+  TodoListItemId,
   TodoListItemState,
   UpdateItemPayload,
 } from "../types";
@@ -23,29 +25,29 @@ const actionHandlers = {
   [TodoListActionType.MoveItem]: handleMoveItem,
   [TodoListActionType.CreateItem]: handleCreateItem,
   [TodoListActionType.UpdateItem]: handleUpdateItem,
+  [TodoListActionType.RemoveItem]: handleRemoveItem,
 };
 
 export const todoListReducer: Reducer<TodoListData, TodoListAction> = (
   prevState,
   action
 ) => {
-  const nextState =
+  const newState =
     actionHandlers[action.type]?.(prevState, action) ?? prevState;
 
-  storage.write(TODO_LIST_STATE_KEY, nextState);
+  storage.write(TODO_LIST_STATE_KEY, newState);
 
-  console.log({ ...action, initialState: prevState, newState: nextState });
+  console.log({ ...action, prevState, newState });
 
-  return nextState;
+  return newState;
 };
 
-export const useTodoList = (): [
-  TodoListData,
-  React.MutableRefObject<TodoListActions>
-] => {
+export const useTodoList = (): [TodoListData, TodoListActions] => {
   const [state, dispatch] = useReducer(todoListReducer, initialTodoList);
 
-  const moveItem = useCallback(
+  const actions: Partial<TodoListActions> = useMemo(() => ({}), []);
+
+  actions.moveItem = useCallback(
     (payload: MoveItemPayload) => {
       const item = state.items[payload.id];
 
@@ -80,7 +82,7 @@ export const useTodoList = (): [
     [state.items, dispatch]
   );
 
-  const createItem = useCallback(() => {
+  actions.createItem = useCallback(() => {
     const existingEmptyTodo = Object.values(state.items).find(
       (i) => i.state === TodoListItemState.Todo && !i.contents.trim().length
     );
@@ -90,7 +92,7 @@ export const useTodoList = (): [
     dispatch({ type: TodoListActionType.CreateItem });
   }, [state.items, dispatch]);
 
-  const updateItem = useCallback(
+  actions.updateItem = useCallback(
     (payload: UpdateItemPayload) => {
       dispatch({
         type: TodoListActionType.UpdateItem,
@@ -100,7 +102,18 @@ export const useTodoList = (): [
     [dispatch]
   );
 
-  const actions = useRef({ moveItem, createItem, updateItem });
+  actions.removeItem = useCallback((payload: TodoListItemId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently remove this item?"
+    );
 
-  return [state, actions];
+    if (!confirmed) return;
+
+    dispatch({
+      type: TodoListActionType.RemoveItem,
+      data: payload,
+    });
+  }, [dispatch]);
+
+  return [state, actions as TodoListActions];
 };

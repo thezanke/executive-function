@@ -1,7 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
+import Delete from "@mui/icons-material/DeleteRounded";
 import Fab from "@mui/material/Fab";
-import React, { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
+import { useDrop } from "react-dnd";
+import { theme } from "../theme";
 import { TodoListActionsContext } from "./TodoListActionsContext";
+import { DraggableType } from "./types";
 
 export const TodoListFab = () => {
   const todoListActions = useContext(TodoListActionsContext);
@@ -10,18 +14,45 @@ export const TodoListFab = () => {
     todoListActions?.createItem();
   }, [todoListActions]);
 
+  const handleItemDrop = useCallback((item) => {
+    console.log(item);
+  }, []);
+
+  const [{ canDrop, isOver }, dropRef] = useDrop({
+    accept: DraggableType.ListItem,
+    drop: handleItemDrop,
+    collect: (monitor) => ({
+      canDrop: !!monitor.canDrop(),
+      isOver: !!monitor.isOver(),
+    }),
+  });
+
+  const [bgcolor, color] = useMemo(() => {
+    if (isOver) {
+      return [theme.palette.error.light, theme.palette.common.black];
+    }
+
+    if (canDrop) {
+      return [theme.palette.error.main, theme.palette.common.black];
+    }
+
+    return [theme.palette.primary.main, theme.palette.primary.contrastText];
+  }, [canDrop, isOver]);
+
   return (
     <Fab
-      color="primary"
+      ref={dropRef}
       aria-label="add"
       sx={{
-        position: "absolute",
-        bottom: 50,
-        right: 50,
+        bgcolor,
+        color,
+        position: "fixed",
+        bottom: 24,
+        right: 24,
       }}
       onClick={dispatchItemCreate}
     >
-      <AddIcon />
+      {canDrop ? <Delete /> : <AddIcon />}
     </Fab>
   );
 };

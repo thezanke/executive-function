@@ -4,7 +4,7 @@ import { TodoList } from "./todoList/TodoList";
 
 export const MainLayout = () => {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ pb: 1 }}>
       <Logo />
       <TodoList />
     </Container>

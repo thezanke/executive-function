@@ -2,7 +2,10 @@ import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/system";
 import React from "react";
+import { arraysAreEqual } from "../helpers/arraysAreEqual";
+import { theme } from "../theme";
 import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
 import { TodoListItemState } from "./types";
@@ -19,14 +22,21 @@ const propsAreEqual = (
 ) => {
   if (prevProps.header !== nextProps.header) return false;
   if (prevProps.listKey !== nextProps.listKey) return false;
-  if (prevProps.items.length !== nextProps.items.length) return false;
-  let s = new Set([...prevProps.items, ...nextProps.items]);
-  if (s.size !== prevProps.items.length) return false;
+  if (!arraysAreEqual(prevProps.items, nextProps.items)) return false;
   return true;
 };
 
+const TodoSubListHeader: React.FunctionComponent<{ header: string }> =
+  React.memo(({ header }) => (
+    <ListSubheader sx={{ bgcolor: "transparent" }}>
+      <Typography>{header}</Typography>
+    </ListSubheader>
+  ));
+
+const hoverColor = alpha(theme.palette.primary.main, 0.15);
+
 export const TodoSubList: React.FunctionComponent<TodoSubListProps> =
-  React.memo((props) => {
+  React.memo(function TodoSubList(props) {
     const { header, items, listKey } = props;
     const [{ isOver }, nodeRef] = useTodoSubList(listKey);
 
@@ -35,12 +45,11 @@ export const TodoSubList: React.FunctionComponent<TodoSubListProps> =
         <List
           ref={nodeRef}
           sx={{
-            bgcolor: isOver ? "rgba(255,255,150,0.1)" : "transparent",
+            bgcolor: isOver ? hoverColor : "transparent",
           }}
+          dense
         >
-          <ListSubheader sx={{ bgcolor: "transparent" }}>
-            <Typography>{header}</Typography>
-          </ListSubheader>
+          <TodoSubListHeader header={header} />
           {items.length > 0 &&
             items.map((item) => (
               <TodoListItem key={item.id} listKey={listKey} {...item} />

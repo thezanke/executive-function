@@ -1,7 +1,8 @@
-import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { InputBase, ListItemIcon } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import DragHandleRoundedIcon from "@mui/icons-material/DragHandleRounded";
+import grey from "@mui/material/colors/grey";
+import InputBase from "@mui/material/InputBase";
 import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import React, {
   ChangeEvent,
   KeyboardEvent,
@@ -14,21 +15,22 @@ import { TodoListItemData, TodoListItemState } from "./types";
 
 export const TodoListItem: React.FunctionComponent<
   TodoListItemData & { listKey: TodoListItemState }
-> = React.memo(({ id, listKey, contents }) => {
+> = React.memo(function TodoListItem({ id, listKey, contents }) {
   const [{ isDragging }, handleRef, itemRef] = useTodoListItem(id);
   const todoListActions = useContext(TodoListActionsContext);
+
   const handleInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       todoListActions?.updateItem({ id, value: e.target.value });
     },
     [id, todoListActions]
   );
+
   const handleKey = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        console.log("test");
-        todoListActions?.createItem();
-      }
+      if (e.key !== "Enter") return;
+
+      todoListActions?.createItem();
     },
     [todoListActions]
   );
@@ -37,9 +39,9 @@ export const TodoListItem: React.FunctionComponent<
   const isDone = listKey === TodoListItemState.Done;
 
   return (
-    <ListItem ref={itemRef} sx={{ cursor }} disablePadding>
-      <ListItemIcon ref={handleRef} sx={{ justifyContent: "center" }}>
-        <DragHandleIcon fontSize="medium" htmlColor={grey[600]} />
+    <ListItem id={id} ref={itemRef} >
+      <ListItemIcon ref={handleRef} sx={{ cursor}}>
+        <DragHandleRoundedIcon fontSize="large" htmlColor={grey[800]} />
       </ListItemIcon>
       <InputBase
         value={contents}
