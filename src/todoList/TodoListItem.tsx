@@ -39,8 +39,8 @@ export const TodoListItem: React.FunctionComponent<
   const isDone = listKey === TodoListItemState.Done;
 
   return (
-    <ListItem id={id} ref={itemRef} >
-      <ListItemIcon ref={handleRef} sx={{ cursor}}>
+    <ListItem id={id} ref={itemRef}>
+      <ListItemIcon ref={handleRef} sx={{ cursor }}>
         <DragHandleRoundedIcon fontSize="large" htmlColor={grey[800]} />
       </ListItemIcon>
       <InputBase

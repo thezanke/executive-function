@@ -1,3 +1,4 @@
+import { Box } from "@mui/system";
 import React from "react";
 import { useTodoList } from "./hooks/useTodoList";
 import { TodoListActionsContext } from "./TodoListActionsContext";
@@ -24,13 +25,23 @@ export const TodoList: React.FunctionComponent = () => {
         header="Todo"
         listKey={TodoListItemState.Todo}
         items={todo}
+        sx={{ mb: 0 }}
+        dense
       />
+      <Box
+        display="flex"
+        justifyContent="center"
+        mt="1rem"
+        mb="2rem"
+      >
+        <TodoListFab />
+      </Box>
       <TodoSubList
         header="Done"
         listKey={TodoListItemState.Done}
         items={done}
+        dense
       />
-      <TodoListFab />
     </TodoListActionsContext.Provider>
   );
 };

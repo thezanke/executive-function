@@ -102,18 +102,15 @@ export const useTodoList = (): [TodoListData, TodoListActions] => {
     [dispatch]
   );
 
-  actions.removeItem = useCallback((payload: TodoListItemId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to permanently remove this item?"
-    );
-
-    if (!confirmed) return;
-
-    dispatch({
-      type: TodoListActionType.RemoveItem,
-      data: payload,
-    });
-  }, [dispatch]);
+  actions.removeItem = useCallback(
+    (payload: TodoListItemId) => {
+      dispatch({
+        type: TodoListActionType.RemoveItem,
+        data: payload,
+      });
+    },
+    [dispatch]
+  );
 
   return [state, actions as TodoListActions];
 };

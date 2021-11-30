@@ -1,19 +1,23 @@
 import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
 import Paper from "@mui/material/Paper";
+import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { alpha } from "@mui/system";
-import React from "react";
+import { emphasize } from "@mui/system/colorManipulator";
+import { SxProps } from "@mui/system/styleFunctionSx/styleFunctionSx";
+import React, { useMemo } from "react";
 import { arraysAreEqual } from "../helpers/arraysAreEqual";
 import { theme } from "../theme";
 import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
-import { TodoListItemState } from "./types";
+import { TodoListItemData, TodoListItemState } from "./types";
 
 type TodoSubListProps = {
   header: string;
   listKey: TodoListItemState;
-  items: any[];
+  items: TodoListItemData[];
+  dense?: boolean;
+  sx?: SxProps<Theme>;
 };
 
 const propsAreEqual = (
@@ -26,33 +30,27 @@ const propsAreEqual = (
   return true;
 };
 
-const TodoSubListHeader: React.FunctionComponent<{ header: string }> =
-  React.memo(({ header }) => (
-    <ListSubheader sx={{ bgcolor: "transparent" }}>
-      <Typography>{header}</Typography>
-    </ListSubheader>
-  ));
-
-const hoverColor = alpha(theme.palette.primary.main, 0.15);
+const defaultBgcolor = theme.palette.grey[900];
+const hoverColor = emphasize(defaultBgcolor, 0.05);
 
 export const TodoSubList: React.FunctionComponent<TodoSubListProps> =
   React.memo(function TodoSubList(props) {
-    const { header, items, listKey } = props;
-    const [{ isOver }, nodeRef] = useTodoSubList(listKey);
+    const [{ isOver }, nodeRef] = useTodoSubList(props.listKey);
+
+    const bgcolor = useMemo(
+      () => (isOver ? hoverColor : defaultBgcolor),
+      [isOver]
+    );
 
     return (
-      <Paper sx={{ margin: "1em 0" }}>
-        <List
-          ref={nodeRef}
-          sx={{
-            bgcolor: isOver ? hoverColor : "transparent",
-          }}
-          dense
-        >
-          <TodoSubListHeader header={header} />
-          {items.length > 0 &&
-            items.map((item) => (
-              <TodoListItem key={item.id} listKey={listKey} {...item} />
+      <Paper sx={{ margin: "1em 0", position: "relative", ...props.sx }}>
+        <List ref={nodeRef} sx={{ bgcolor }} dense={props.dense}>
+          <ListSubheader sx={{ bgcolor }}>
+            <Typography>{props.header}</Typography>
+          </ListSubheader>
+          {props.items.length > 0 &&
+            props.items.map((item) => (
+              <TodoListItem key={item.id} listKey={props.listKey} {...item} />
             ))}
         </List>
       </Paper>
