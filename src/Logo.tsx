@@ -10,7 +10,7 @@ export const Logo = () => {
       align="center"
       fontFamily="'M PLUS 1 Code', sans-serif;"
     >
-      Executive();
+      ExecutiveFn();
     </Typography>
   );
 };
