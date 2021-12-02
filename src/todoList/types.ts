@@ -10,6 +10,8 @@ export type TodoListItemData = {
   id: TodoListItemId;
   contents: string;
   state: TodoListItemState;
+  createdAt: Date;
+  completedAt?: Date;
 };
 
 export type TodoListData = {

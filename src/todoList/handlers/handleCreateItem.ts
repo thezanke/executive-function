@@ -12,6 +12,7 @@ export const handleCreateItem: Reducer<TodoListData, TodoListAction> = (
     id,
     contents: "",
     state: TodoListItemState.Todo,
+    createdAt: new Date(),
   };
 
   return newState;

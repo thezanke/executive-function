@@ -6,13 +6,30 @@ import { TodoListFab } from "./TodoListFab";
 import { TodoSubList } from "./TodoSubList";
 import { TodoListItemState } from "./types";
 
+function sortBy<T>(
+  arr: T[],
+  key: keyof T,
+  direction: "asc" | "desc" = "asc"
+): T[] {
+  return arr.sort((a: Record<keyof T, any>, b: Record<keyof T, any>) => {
+    const asc = direction === "asc";
+    if (a[key] > b[key]) return asc ? 1 : -1;
+    if (a[key] < b[key]) return asc ? -1 : 1;
+    return 0;
+  });
+}
+
 export const TodoList: React.FunctionComponent = () => {
   const [todoList, actions] = useTodoList();
 
-  const items = Object.values(todoList.items).reverse();
+  const items = sortBy(Object.values(todoList.items), "createdAt");
   const current = items.filter((i) => i.state === TodoListItemState.Current);
   const todo = items.filter((i) => i.state === TodoListItemState.Todo);
-  const done = items.filter((i) => i.state === TodoListItemState.Done);
+  const done = sortBy(
+    items.filter((i) => i.state === TodoListItemState.Done),
+    "completedAt",
+    "desc"
+  );
 
   return (
     <TodoListActionsContext.Provider value={actions}>
@@ -28,12 +45,7 @@ export const TodoList: React.FunctionComponent = () => {
         sx={{ mb: 0 }}
         dense
       />
-      <Box
-        display="flex"
-        justifyContent="center"
-        mt="1rem"
-        mb="2rem"
-      >
+      <Box display="flex" justifyContent="center" mt="1rem" mb="2rem">
         <TodoListFab />
       </Box>
       <TodoSubList
