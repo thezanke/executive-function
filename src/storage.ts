@@ -1,4 +1,8 @@
-import { TodoListData, TodoListItemData } from "./todoList/types";
+import {
+  TodoListData,
+  TodoListItemData,
+  TodoListItemState,
+} from "./todoList/types";
 
 const reviveItem = (parsedItem: any): TodoListItemData => {
   const createdAt = parsedItem.createdAt
@@ -6,8 +10,11 @@ const reviveItem = (parsedItem: any): TodoListItemData => {
     : new Date();
 
   const item = { ...parsedItem, createdAt };
-  if (parsedItem.completedAt)
+  if (parsedItem.completedAt) {
     item.completedAt = new Date(parsedItem.completedAt);
+  } else if (parsedItem.state === TodoListItemState.Done) {
+    item.completedAt = new Date();
+  }
 
   return item;
 };
@@ -19,8 +26,6 @@ const reviveState = (parsedState: any): TodoListData | null => {
   Object.entries(items).forEach(([id, item]) => {
     items[id] = reviveItem(item);
   });
-
-  console.log(items);
 
   let state: TodoListData = { ...parsedState, items };
 

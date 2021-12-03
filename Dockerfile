@@ -8,7 +8,7 @@ ENV NODE_ENV=development
 RUN npm ci
 COPY src /app/src
 COPY public /app/public
-ENV REACT_APP_ENV=production
+ENV NODE_ENV=production
 RUN npm run build
 
 FROM nginx:${NGINX_VERSION} AS web

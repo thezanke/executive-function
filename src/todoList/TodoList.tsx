@@ -1,23 +1,11 @@
 import { Box } from "@mui/system";
 import React from "react";
+import { sortBy } from "../helpers/sortBy";
 import { useTodoList } from "./hooks/useTodoList";
 import { TodoListActionsContext } from "./TodoListActionsContext";
 import { TodoListFab } from "./TodoListFab";
 import { TodoSubList } from "./TodoSubList";
 import { TodoListItemState } from "./types";
-
-function sortBy<T>(
-  arr: T[],
-  key: keyof T,
-  direction: "asc" | "desc" = "asc"
-): T[] {
-  return arr.sort((a: Record<keyof T, any>, b: Record<keyof T, any>) => {
-    const asc = direction === "asc";
-    if (a[key] > b[key]) return asc ? 1 : -1;
-    if (a[key] < b[key]) return asc ? -1 : 1;
-    return 0;
-  });
-}
 
 export const TodoList: React.FunctionComponent = () => {
   const [todoList, actions] = useTodoList();

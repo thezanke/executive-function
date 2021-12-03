@@ -37,7 +37,9 @@ export const todoListReducer: Reducer<TodoListData, TodoListAction> = (
 
   storage.write(TODO_LIST_STATE_KEY, newState);
 
-  console.log({ ...action, prevState, newState });
+  if (process.env.NODE_ENV === "development") {
+    console.log({ ...action, prevState, newState });
+  }
 
   return newState;
 };
