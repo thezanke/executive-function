@@ -25,6 +25,7 @@ export const TodoList: React.FunctionComponent = () => {
         header="Current"
         listKey={TodoListItemState.Current}
         items={current}
+        dense
       />
       <TodoSubList
         header="Todo"

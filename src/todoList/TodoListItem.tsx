@@ -1,4 +1,5 @@
 import DragHandleRoundedIcon from "@mui/icons-material/DragHandleRounded";
+import { ListItemText, Typography } from "@mui/material";
 import grey from "@mui/material/colors/grey";
 import InputBase from "@mui/material/InputBase";
 import ListItem from "@mui/material/ListItem";
@@ -15,7 +16,7 @@ import { TodoListItemData, TodoListItemState } from "./types";
 
 export const TodoListItem: React.FunctionComponent<
   TodoListItemData & { listKey: TodoListItemState }
-> = React.memo(function TodoListItem({ id, listKey, contents }) {
+> = React.memo(function TodoListItem({ id, listKey, contents, completedAt }) {
   const [{ isDragging }, handleRef, itemRef] = useTodoListItem(id);
   const todoListActions = useContext(TodoListActionsContext);
 
@@ -43,14 +44,25 @@ export const TodoListItem: React.FunctionComponent<
       <ListItemIcon ref={handleRef} sx={{ cursor }}>
         <DragHandleRoundedIcon fontSize="large" htmlColor={grey[800]} />
       </ListItemIcon>
-      <InputBase
-        value={contents}
-        placeholder="I need to..."
-        disabled={isDone}
-        onChange={handleInputChange}
-        onKeyPress={handleKey}
-        autoFocus={!contents.length}
-        fullWidth
+      <ListItemText
+        primary={
+          <InputBase
+            value={contents}
+            placeholder="I need to..."
+            disabled={isDone}
+            onChange={handleInputChange}
+            onKeyPress={handleKey}
+            autoFocus={!contents.length}
+            fullWidth
+          />
+        }
+        secondary={
+          isDone && (
+            <Typography color="gray" fontSize={12}>
+              {completedAt?.toLocaleString()}
+            </Typography>
+          )
+        }
       />
     </ListItem>
   );
