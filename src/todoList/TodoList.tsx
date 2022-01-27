@@ -25,14 +25,14 @@ export const TodoList: React.FunctionComponent = () => {
         header="Current"
         listKey={TodoListItemState.Current}
         items={current}
-        dense
+        defaultExpanded
       />
       <TodoSubList
         header="Todo"
         listKey={TodoListItemState.Todo}
         items={todo}
         sx={{ mb: 0 }}
-        dense
+        defaultExpanded
       />
       <Box display="flex" justifyContent="center" mt="1rem" mb="2rem">
         <TodoListFab />
@@ -41,7 +41,6 @@ export const TodoList: React.FunctionComponent = () => {
         header="Done"
         listKey={TodoListItemState.Done}
         items={done}
-        dense
       />
     </TodoListActionsContext.Provider>
   );
