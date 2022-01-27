@@ -3,11 +3,9 @@ import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import List from "@mui/material/List";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { emphasize } from "@mui/system/colorManipulator";
 import { SxProps } from "@mui/system/styleFunctionSx/styleFunctionSx";
-import React, { useMemo } from "react";
+import React from "react";
 import { arraysAreEqual } from "../helpers/arraysAreEqual";
-import { theme } from "../theme";
 import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
 import { TodoListItemData, TodoListItemState } from "./types";
@@ -30,23 +28,15 @@ const propsAreEqual = (
   return true;
 };
 
-const defaultBgcolor = theme.palette.background.paper;
-const hoverColor = emphasize(defaultBgcolor, 0.05);
-
 export const TodoSubList: React.FunctionComponent<TodoSubListProps> =
   React.memo(function TodoSubList(props) {
     const [{ isOver }, nodeRef] = useTodoSubList(props.listKey);
-
-    const bgcolor = useMemo(
-      () => (isOver ? hoverColor : defaultBgcolor),
-      [isOver]
-    );
 
     return (
       <Accordion
         defaultExpanded={props.defaultExpanded}
         ref={nodeRef}
-        sx={{ bgcolor }}
+        disabled={isOver}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>{props.header}</Typography>
