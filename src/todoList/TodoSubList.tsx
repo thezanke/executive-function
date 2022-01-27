@@ -1,14 +1,49 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import MuiAccordionSummary, {
+  AccordionSummaryProps
+} from "@mui/material/AccordionSummary";
 import List from "@mui/material/List";
-import { Theme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { SxProps } from "@mui/system/styleFunctionSx/styleFunctionSx";
 import React from "react";
+import { ConnectDropTarget } from "react-dnd";
 import { arraysAreEqual } from "../helpers/arraysAreEqual";
 import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
 import { TodoListItemData, TodoListItemState } from "./types";
+
+const Accordion = styled(
+  (props: AccordionProps & { innerRef: ConnectDropTarget }) => (
+    <MuiAccordion square disableGutters ref={props.innerRef} {...props} />
+  )
+)(() => ({
+  border: "none",
+  "&:before": {
+    display: "none",
+  },
+}));
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+  "& .MuiAccordionSummary-content": {
+    marginLeft: theme.spacing(1),
+  },
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: theme.spacing(2),
+}));
 
 type TodoSubListProps = {
   header: string;
@@ -35,10 +70,10 @@ export const TodoSubList: React.FunctionComponent<TodoSubListProps> =
     return (
       <Accordion
         defaultExpanded={props.defaultExpanded}
-        ref={nodeRef}
+        innerRef={nodeRef}
         disabled={isOver}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary>
           <Typography>{props.header}</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ padding: 0 }}>

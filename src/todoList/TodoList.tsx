@@ -27,6 +27,7 @@ export const TodoList: React.FunctionComponent = () => {
         items={current}
         defaultExpanded
       />
+      <br />
       <TodoSubList
         header="Todo"
         listKey={TodoListItemState.Todo}
