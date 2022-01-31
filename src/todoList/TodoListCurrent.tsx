@@ -22,7 +22,7 @@ const TodoListCurrentRoot = styled(MuiPaper)(
 );
 
 const Header = styled(Typography)(({ theme }) => ({
-  padding: theme.spacing(1, 2, 0),
+  padding: theme.spacing(1, 2),
 }));
 
 type TodoSubListProps = {
