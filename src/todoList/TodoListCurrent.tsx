@@ -1,3 +1,4 @@
+import StarIcon from "@mui/icons-material/Star";
 import List from "@mui/material/List";
 import MuiPaper from "@mui/material/Paper";
 import { styled, Theme } from "@mui/material/styles";
@@ -21,7 +22,9 @@ const TodoListCurrentRoot = styled(MuiPaper)(
   }
 );
 
-const Header = styled(Typography)(({ theme }) => ({
+const Header = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   padding: theme.spacing(1, 2),
 }));
 
@@ -49,7 +52,12 @@ export const TodoListCurrent: React.FunctionComponent<TodoSubListProps> =
 
     return (
       <TodoListCurrentRoot ref={nodeRef} isOver={isOver}>
-        <Header>{props.header}</Header>
+        <Header>
+          <StarIcon sx={{ fontSize: "0.9rem" }} />
+          <Typography sx={(theme) => ({ pl: theme.spacing(1) })}>
+            {props.header}
+          </Typography>
+        </Header>
         <List dense disablePadding>
           {props.items.length > 0 &&
             props.items.map((item) => (
