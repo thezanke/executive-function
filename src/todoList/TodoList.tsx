@@ -5,6 +5,7 @@ import { useTodoList } from "./hooks/useTodoList";
 import { TodoListActionsContext } from "./TodoListActionsContext";
 import { TodoListFab } from "./TodoListFab";
 import { TodoSubList } from "./TodoSubList";
+import { TodoListCurrent } from "./TodoListCurrent";
 import { TodoListItemState } from "./types";
 
 export const TodoList: React.FunctionComponent = () => {
@@ -21,7 +22,7 @@ export const TodoList: React.FunctionComponent = () => {
 
   return (
     <TodoListActionsContext.Provider value={actions}>
-      <TodoSubList
+      <TodoListCurrent
         header="Current"
         listKey={TodoListItemState.Current}
         items={current}

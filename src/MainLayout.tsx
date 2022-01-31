@@ -1,11 +1,9 @@
 import Container from "@mui/material/Container";
-import { Logo } from "./Logo";
 import { TodoList } from "./todoList/TodoList";
 
 export const MainLayout = () => {
   return (
-    <Container maxWidth="sm" sx={{ pb: 1 }}>
-      <Logo />
+    <Container maxWidth="sm" sx={{ py: 3 }}>
       <TodoList />
     </Container>
   );
