@@ -17,7 +17,7 @@ import { TodoListItemData, TodoListItemState } from "./types";
 export const TodoListItem: React.FunctionComponent<
   TodoListItemData & { listKey: TodoListItemState }
 > = React.memo(function TodoListItem({ id, listKey, contents, completedAt }) {
-  const [{ isDragging }, handleRef, itemRef] = useTodoListItem(id);
+  const [{ isDragging }, dragRef, dragPreviewRef] = useTodoListItem(id);
   const todoListActions = useContext(TodoListActionsContext);
 
   const handleInputChange = useCallback(
@@ -40,8 +40,8 @@ export const TodoListItem: React.FunctionComponent<
   const isDone = listKey === TodoListItemState.Done;
 
   return (
-    <ListItem id={id} ref={itemRef}>
-      <ListItemIcon ref={handleRef} sx={{ cursor }}>
+    <ListItem id={id} ref={dragPreviewRef}>
+      <ListItemIcon ref={dragRef} sx={{ cursor }}>
         <DragHandleRoundedIcon fontSize="large" htmlColor={grey[800]} />
       </ListItemIcon>
       <ListItemText

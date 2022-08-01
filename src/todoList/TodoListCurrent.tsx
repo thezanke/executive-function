@@ -11,15 +11,15 @@ import { useTodoSubList } from "./hooks/useTodoSubList";
 import { TodoListItem } from "./TodoListItem";
 import { TodoListItemData, TodoListItemState } from "./types";
 
-const TodoListCurrentRoot = styled(MuiPaper)(
-  ({ theme, isOver }: MUIStyledCommonProps<Theme> & { isOver: boolean }) => {
-    return {
-      borderRadius: 0,
-      backgroundColor: isOver
-        ? theme?.palette.action.disabledBackground
-        : theme?.palette.background.paper,
-    };
-  }
+const TodoListCurrentRoot = styled(MuiPaper, {
+  shouldForwardProp: prop => prop !== 'isOver',
+})(
+  ({ theme, isOver }: MUIStyledCommonProps<Theme> & { isOver: boolean }) => ({
+    borderRadius: 0,
+    backgroundColor: isOver
+      ? theme?.palette.action.disabledBackground
+      : theme?.palette.background.paper,
+  })
 );
 
 const Header = styled("div")(({ theme }) => ({

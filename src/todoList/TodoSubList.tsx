@@ -16,8 +16,8 @@ import { TodoListItem } from "./TodoListItem";
 import { TodoListItemData, TodoListItemState } from "./types";
 
 const Accordion = styled(
-  (props: AccordionProps & { innerRef: ConnectDropTarget }) => (
-    <MuiAccordion square disableGutters ref={props.innerRef} {...props} />
+  ({ innerRef, ...props }: AccordionProps & { innerRef: ConnectDropTarget }) => (
+    <MuiAccordion square disableGutters ref={innerRef} {...props} />
   )
 )(() => ({
   border: "none",
